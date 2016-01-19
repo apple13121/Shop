@@ -1,0 +1,72 @@
+﻿@model Carts.Models.OrderModel.Ship
+
+@{
+    ViewBag.Title = "結帳";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    //取得目前購物車
+    var cart = Carts.Models.Cart.Operation.GetCurrentCart();
+}
+
+<h2>結帳</h2>
+
+@* 列出購物車內商品讓使用者作最後確認 *@
+<table class="table">
+    <thead><tr><td>商品圖</td><td>名稱</td><td>售價</td><td>數量</td><td>小計</td></tr></thead>
+    <tbody>
+        @foreach (var pd in cart) /* 使用foreach將所有商品列出 */
+        {
+            <tr>
+                <td><img src="@pd.DefaultImageURL" width="50" height="50" /></td>
+                <td>@pd.Name</td>
+                <td>@pd.Price</td>
+                <td>@pd.Quantity</td>
+                <td>@pd.Amout</td>
+            </tr>
+        }
+        <tr><td colspan="3"></td><td>總計</td><td>@cart.TotalAmout</td></tr>
+    </tbody>
+</table>
+
+
+@* 讓使用者填入寄送資訊 *@
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>收貨人資訊</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.RecieverName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.RecieverName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.RecieverName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.RecieverPhone, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.RecieverPhone, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.RecieverPhone, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.RecieverAddress, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.RecieverAddress, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.RecieverAddress, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="確定購買" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+

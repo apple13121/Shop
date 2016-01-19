@@ -1,0 +1,22 @@
+﻿@*指定model資料型態為List<Carts.Models.RouteTest.TempProducts>*@
+@model List<Carts.Models.RouteTest.TempProducts>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>商品列表</h2>
+    <table class="table">
+    <thead><tr>編號<td></td><td>名稱</td><td>售價</td></tr></thead>
+    <tbody>
+    @foreach (var pd in this.Model)
+    {
+        <tr>
+            <td>@pd.ID</td>
+            <td>@pd.Name</td>
+            <td>@pd.Price</td>
+        </tr>
+    }
+    </tbody>
+    </table>
+

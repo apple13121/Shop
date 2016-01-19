@@ -1,0 +1,83 @@
+﻿@model Carts.Models.Cart.Product
+
+@{
+    ViewBag.Title = "Detail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>商品資訊</h2>
+<div id="fb-root"></div>
+<!--Facebook generated Java Script Code- -->
+<script>
+(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v2.5";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+
+        </dt>
+
+        <dd>
+            <img src="@this.Model.DefaultImageURL" width="400" />
+        </dd>
+
+        <dt>
+            名稱
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            描述
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+
+        <dt>
+            售價
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Price)
+        </dd>
+
+        <dt>
+            庫存數量
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Quantity)
+        </dd>
+
+        <dt>
+            上架日期
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PublishDate)
+        </dd>
+    </dl>
+</div>
+<p><a onclick="AddToCart(@this.Model.Id)" href="javascript:void(0);"
+   class="btn btn-primary" role="button">
+    加入購物車
+</a></p>
+<!--Like Button Share Button Code -->
+<script>
+    document.write("<div class='fb-like' data-href='"+ window.location.href+"' data-width='100' data-layout='standard' data-action='like' data-show-faces='true' data-share='false'></div>");
+    document.write("<div class='fb-share-button' data-href= '" + window.location.href + "' data-layout= 'button_count'></div>");
+</script>
+
+<p>
+@Html.ActionLink("回首頁", "Index", null, new { @class = "btn btn-default" })
+</p>

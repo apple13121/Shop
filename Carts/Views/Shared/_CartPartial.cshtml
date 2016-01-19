@@ -1,0 +1,29 @@
+﻿@{ 
+    //取得當前購物車所有內容
+    var currentCart = Carts.Models.Cart.Operation.GetCurrentCart();
+}
+<a id="CartDropDown" class="dropdown-toggle" data-toggle="dropdown">
+    @String.Format("共{0}元({1})", currentCart.TotalAmout, currentCart.Count)
+    <span class="caret"></span>
+</a>
+<ul class="dropdown-menu" role="menu" aria-labelledby="CartDropDown">
+    @if (currentCart.Count > 0)
+    {
+        foreach (var cartitem in currentCart)
+        {
+            //依序輸出
+            <li class="col-12">
+                <span class="col-xs-10">@cartitem.Name @cartitem.Price 元 X @cartitem.Quantity</span>
+                <span class="btn btn-danger col-xs-2" onclick="RemoveFromCart('@cartitem.Id')">
+                    X
+                </span>
+            </li>
+        }
+        <li class="divider"></li>
+        <li><a class="btn btn-default text-center" href="@Url.Action("Index","Order", new { })">結帳去</a></li>
+    }
+    else
+    {
+        <li><a class="btn btn-default text-center" href="#">購物車無任何商品</a></li>
+    }
+</ul>

@@ -1,0 +1,178 @@
+﻿@using Microsoft.AspNet.Identity
+@model List<Carts.Models.Cart.Product>
+@{
+    ViewBag.Title = "購物首頁";
+    var UserID = User.Identity.GetUserId();
+    var UserName = User.Identity.Name;
+}
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+<style type="text/css">
+    
+
+    a img {
+		border: none;
+		vertical-align: middle;
+	}
+
+	#abgne-110223 {
+		height: 332px;	/* 圖片的高 + 30 */
+		width: 300px;	/* 圖片的寬 + 邊框寬度 * 2 */
+		overflow: hidden;
+	}
+
+	#abgne-110223 .wrap-110223 {
+		height: 300px;	/* 圖片的高 */
+		width: 300px;	/* 圖片的寬 */
+		overflow: hidden;
+		position: relative;
+		margin-bottom: 5px;
+		border: 1px solid #ccc;
+	}
+
+	.wrap-110223 ul, .wrap-110223 li {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.wrap-110223 ul {
+		position: absolute;
+	}
+
+	.wrap-110223 ul li {
+		float: left;
+	}
+
+	#abgne-110223 .arrows {
+		float: right;
+	}
+
+	#abgne-110223 .arrows a {
+		float: left;
+		width: 22px;
+		height: 22px;
+		background-color: powderblue;
+	}
+
+	#abgne-110223 a.next {
+		margin-left: -1px;
+		background-position: right top;
+	}
+
+	#abgne-110223 .caption {
+		float: left;
+		width: 256px;		/* 區塊的寬 - .arrows 的寬(44) */
+		overflow: hidden;	/* 避免文字太長 */
+		color: #666;
+		font-size: 13px;
+		line-height: 22px;	/* .arrows a 的高 */
+	}
+</style>
+
+<script type="text/javascript">
+	$(function(){
+		// 先取得 #abgne-110223 及 ul, li 及 .caption 元素
+		// 並預設先顯示第幾個, 還有動畫速度
+		var $block = $('#abgne-110223'),
+			$wrap = $block.find('.wrap-110223'),
+			$ul = $wrap.find('ul'),
+			$li = $ul.find('li'),
+			$caption = $block.find('.caption'),
+			_default = 0,
+			_width = $wrap.width(),
+			animateSpeed = 400,
+			timer, speed = 3000, isHover = false;
+
+		// 先把 ul 的寬度設成 li 數量 x $wrap 的寬
+		// 並在滑鼠移上時停止計時器; 移出後再啟動計時器
+		$ul.width(_width * $li.length).hover(function(){
+			isHover = true;
+			clearTimeout(timer);
+		}, function(){
+			isHover = false;
+			timer = setTimeout(move, speed);
+		});
+		// 如果 .arrows 中的 a 被點擊時
+		$block.find('.arrows').delegate('a', 'click', function(event){
+			// 如果滑鼠現在是移入狀態就不做動作
+			if(isHover) return;
+			clearTimeout(timer);
+
+			// 先找出 .selected 的元素後移掉該樣式
+			var $selected = $li.filter('.selected').removeClass('selected'),
+				// 找出目前顯示的元素是第幾個
+				_index = $li.index($selected);
+
+			// 依點擊的是上一張或下一張來切換
+			_index = (event.target.className == 'prev' ? _index - 1 + $li.length : _index + 1) % $li.length;
+			$ul.animate({
+				left: _index * _width * -1
+			}, animateSpeed, function(){
+				if(!isHover){
+					timer = setTimeout(move, speed);
+				}
+			});
+			// 改變標題
+			$caption.hide().html($li.eq(_index).addClass('selected').find('img').attr('alt')).fadeIn(animateSpeed);
+
+			return false;
+		});
+
+		// 先顯示預設的
+		$ul.css('left', _default * _width * -1);
+		$caption.html($li.eq(_default).addClass('selected').find('img').attr('alt'));
+
+		$block.find('a').focus(function(){
+			this.blur();
+		});
+
+		// 控制移動用
+		function move() {
+			$('.next').click();
+		}
+
+		// 啟動計時器
+		timer = setTimeout(move, speed);
+	});
+</script>
+
+<div class="jumbotron">
+    <h1>購物網站</h1>
+    <p class="lead">各種商品，歡迎購買</p>
+    <p>請先註冊登入後再點選商品結帳</p>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <h2>台灣自產水果和蔬菜</h2>
+        <p>
+            不添加農藥，品質保證
+        </p>
+        
+    </div>
+    <div class="col-md-4">
+        <h2>水果</h2>
+        <p>新鮮水果</p>
+        <p>@Html.ActionLink("點此看水果產品", "Fruit", null, new { @class = "btn btn-primary btn-lg" })</p>
+    </div>
+    <div class="col-md-4">
+        <h2>蔬菜</h2>
+        <p>有機蔬菜無農藥</p>
+        <p>@Html.ActionLink("點此看蔬菜產品", "Vegetable", null, new { @class = "btn btn-primary btn-lg" })</p>
+    </div>
+</div>
+
+<div id="abgne-110223">
+    <div class="wrap-110223">
+        <ul>
+            @foreach (var product in this.Model)
+            {
+                <li><a href="@Url.Action("Detail", new { id = product.Id })"><img src=@product.DefaultImageURL alt=@product.Name width="298" height="300" /></a></li>
+            }
+        </ul>
+    </div>
+    <div class="caption"></div>
+    <div class="arrows">
+        <a class="prev"><</a>
+        <a class="next">></a>
+    </div>
+</div>
